@@ -10,6 +10,9 @@
 @section('content')
 
 <div class="container">
+    <div class="button_content">
+        <a class="btn btn-sm btn-primary"href="{{ route('member_create') }}">Add Member</a>
+    </div>
     <table id="members_list_table" class="display">
         <thead>
             <tr>
@@ -38,7 +41,7 @@
                         <td>{{ $member->sallary }}</td>
                         <td>{{ Carbon\Carbon::parse($member->joined_at)->format('d-m-Y') }}</td>
                         <td>
-                            <a class="btn btn-sm btn-primary"href="">Edit</a>
+                            <a class="btn btn-sm btn-primary" href="{{ route('member_edit', ['id' => $member->id]) }}">Edit</a>
                             <a class="btn btn-sm btn-danger delete-button"href="">Delete</a>
                         </td>
                     </tr>
