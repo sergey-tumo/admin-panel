@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use App\Http\Requests\MemberCreateRequest;
+use Carbon\Carbon;
 
 class MembersController extends Controller
 {
     public function index()
     {
-        $members = Member::all();
+        $members = Member::orderBy('id', 'DESC')->get();
 
         return view("members.index", compact("members"));   
     }
@@ -19,9 +21,13 @@ class MembersController extends Controller
         return view("members.create");
     }
 
-     public function store(Request $request)
+     public function store(MemberCreateRequest $request)
     {
+        $data = $request->validated();
+        $data['joined_at'] = Carbon::parse($data['joined_at']);
+        Member::create($data);
 
+        return redirect()->route('member_index');
     }
 
      public function edit($id)
