@@ -6,6 +6,7 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use App\Http\Requests\MemberCreateRequest;
 use Carbon\Carbon;
+use Auth;
 
 class MembersController extends Controller
 {
@@ -18,6 +19,10 @@ class MembersController extends Controller
 
     public function create()
     {
+        if(Auth::user()->role == 'writer') {
+            return redirect()->route('member_index');
+        }
+
         return view("members.create");
     }
 
@@ -32,16 +37,27 @@ class MembersController extends Controller
 
      public function edit($id)
     {
-        return view("members.edit");
+          if(Auth::user()->role == 'writer') {
+            return redirect()->route('member_index');
+        }
+        $member = Member::findOrFail($id);
+
+        return view("members.edit", compact("member"));
     }
 
-    public function update(Request $request, $id)
+    public function update(MemberCreateRequest $request, $id)
     {
-        
+        $data = $request->validated();
+        $data['joined_at'] = Carbon::parse($data['joined_at']);
+        Member::findOrFail($id)->update($data);
+
+        return redirect()->route('member_index');
     }
 
      public function destroy($id)
     {
-        
+        Member::findOrFail($id)->delete();
+
+        return redirect()->route('member_index');
     }
 }
