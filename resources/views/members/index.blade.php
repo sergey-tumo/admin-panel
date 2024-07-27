@@ -54,12 +54,33 @@
                             <a class="btn btn-sm btn-primary" href="{{ route('member_edit', ['id' => $member->id]) }}">Edit</a>
 
                              @if (Auth::user()->role == 'super-admin')
-                            <form action="{{route('member_delete',['id' => $member->id])}}" method="post">
-                                <input type="hidden" name="_token" value="{{ csrf_token()  }}" />
-                                 <input type="hidden" name="_method" value="DELETE">
+                            <button type="button" class="btn btn-sm btn-danger delete-button" data-bs-toggle="modal" data-bs-target="#exampleModal-{{$member->id}}">
+Delete
+</button>
 
-                                 <input class="btn btn-sm btn-danger delete-button" type="submit" value="Delete">
-                            </form>
+<div class="modal fade" id="exampleModal-{{$member->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-{{$member->id}}" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel-{{$member->id}}">Modal title</h5>
+<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+Are You Sure To Delete <i>{{$member->first_name}} {{$member->last_name}}</i>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+<form action="{{route('member_delete', ['id' => $member->id])}}" method="post">
+@csrf
+@method('DELETE')
+<input class="btn btn-sm btn-danger" type="submit" value="Delete">
+</form>
+</div>
+</div>
+</div>
+</div>
                             @endif
                         </td>
                         @endif
